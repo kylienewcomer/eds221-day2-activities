@@ -1,8 +1,8 @@
 ---
 title: "salamander-trout"
 format: html
-warnings: FALSE
-messages: FALSE
+warning: FALSE
+message: FALSE
 ---
 ```{r}
 library(tidyverse)
