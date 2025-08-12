@@ -1,0 +1,72 @@
+---
+title: "salamander-trout"
+format: html
+warnings: FALSE
+messages: FALSE
+---
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+
+
+```{r}
+mack_verts<- read_csv(here::here ("data", "AS00601.csv"))
+
+view(mack_verts)
+```
+
+```{r}
+mack_verts <- clean_names(mack_verts)
+mc_wt_5 <- mack_verts$weight[5]
+
+mc_length_8_20 <- mack_verts$length1[8:20]
+
+mc_dates <- mack_verts$sampledate
+
+```
+
+```{r}
+mc_salamanders <- subset(mack_verts, species == "DITE")
+```
+
+```{r, fig.cap= "Data from 'Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present' by Gregory, Stanley V. and Arismendi, Ivan"}
+
+salamander_size <- ggplot(mc_salamanders, aes(length1, weight)) +
+  geom_point() +
+  labs(title = "Lenght and Weight Distribution of Salamanders",
+       x = "Snout-Vent Length (mm)",
+       y = "Weight (g)")
+salamander_size
+```
+
+```{r}
+ggsave(here::here("figs", "salamander_size.png"), height = 5, width = 7)
+```
+
+```{r}
+mc_trout <- mack_verts %>%
+  filter(species == "ONCL")
+```
+
+```{r, fig.cap= "Data from 'Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present' by Gregory, Stanley V. and Arismendi, Ivan"}
+cutthroat_size <- ggplot(mc_trout, aes(length1, weight, color = reach)) +
+  geom_point() +
+  theme(legend.position = "none") +
+  scale_color_manual(values = c("darkblue", "lightpink", "lightgreen")) +
+  labs(title = "Length and Weight Distribution of Trout",
+       x = "Length (mm)",
+       y = "Weight (g)") +
+  facet_wrap(~reach)
+
+
+cutthroat_size
+  
+```
+
+```{r}
+ggsave(here::here("figs", "cutthroat_size.png"), height = 5, width = 7)
+```
+
